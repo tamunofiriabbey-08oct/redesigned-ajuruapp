@@ -1,0 +1,59 @@
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import colors from '../../theme/colors';
+
+export default function LecturerDashboardScreen({ navigation, route }) {
+  const { user } = route.params;
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Lecturer Dashboard</Text>
+      <Text style={styles.sub}>Welcome, {user.fullName}</Text>
+
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => navigation.navigate('Upload', { user })}
+      >
+        <Text style={styles.btnText}>Upload a Book</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => navigation.navigate('BookList', { user, filter: user.id })}
+      >
+        <Text style={styles.btnText}>My Uploads</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => navigation.navigate('Transactions', { user })}
+      >
+        <Text style={styles.btnText}>My Transactions</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.logout}
+        onPress={() => navigation.replace('Login')}
+      >
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 25, backgroundColor: colors.white },
+  header: { fontSize: 26, fontWeight: 'bold', color: colors.primary },
+  sub: { color: colors.gray, marginBottom: 20 },
+
+  btn: {
+    padding: 16,
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+    marginBottom: 12,
+  },
+  btnText: { color: colors.white, fontWeight: 'bold', textAlign: 'center' },
+
+  logout: { marginTop: 20 },
+  logoutText: { color: 'red', fontWeight: 'bold', textAlign: 'center' },
+});
