@@ -1,0 +1,46 @@
+import React from 'react';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import colors from '../theme/colors';
+import { FakeBackend } from '../data/fakeBackend';
+
+export default function TransactionsScreen({ route }) {
+  const { user } = route.params;
+
+  const allTransactions = FakeBackend.getUserTransactions(user.id);
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>My Transactions</Text>
+
+      {allTransactions.length === 0 ? (
+        <Text>No transactions yet.</Text>
+      ) : (
+        allTransactions.map(t => {
+          const book = FakeBackend.getBooks().find(b => b.id === t.bookId);
+
+          return (
+            <View key={t.id} style={styles.card}>
+              <Text style={styles.title}>{book.title}</Text>
+              <Text>Status: {t.paymentStatus}</Text>
+              <Text>Method: {t.paymentMethod}</Text>
+              <Text>Date: {t.date}</Text>
+            </View>
+          );
+        })
+      )}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 15, backgroundColor: colors.white },
+  header: { fontSize: 22, fontWeight: 'bold', color: colors.primary, marginBottom: 12 },
+  card: {
+    padding: 14,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  title: { fontWeight: 'bold', fontSize: 17, marginBottom: 5 },
+});
