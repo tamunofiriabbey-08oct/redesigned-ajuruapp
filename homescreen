@@ -1,0 +1,34 @@
+import React, { useEffect } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import colors from '../theme/colors';
+
+export default function HomeScreen({ navigation, route }) {
+  const { user } = route.params;
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (user.role === 'student') {
+        navigation.replace('StudentDashboard', { user });
+      } else if (user.role === 'lecturer') {
+        navigation.replace('LecturerDashboard', { user });
+      } else if (user.role === 'admin') {
+        navigation.replace('AdminDashboard', { user });
+      }
+    }, 1000);
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={colors.primary} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+});
