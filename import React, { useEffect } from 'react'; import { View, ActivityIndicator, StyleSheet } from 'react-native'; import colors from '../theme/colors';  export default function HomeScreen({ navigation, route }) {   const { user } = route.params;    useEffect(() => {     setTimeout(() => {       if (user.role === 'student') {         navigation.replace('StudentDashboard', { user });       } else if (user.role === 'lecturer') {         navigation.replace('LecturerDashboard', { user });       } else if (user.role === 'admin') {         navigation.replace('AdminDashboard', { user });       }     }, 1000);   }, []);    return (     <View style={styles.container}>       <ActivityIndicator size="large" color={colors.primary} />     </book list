@@ -1,0 +1,98 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import colors from '../theme/colors';
+import { FakeBackend } from '../data/fakeBackend';
+
+export default function BookListScreen({ navigation, route }) {
+  const { user } = route.params;
+  const filterUploader = route.params.filter;
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const books = filterUploader
+    ? FakeBackend.getBooks().filter(b => b.uploaderId === filterUploader)
+    : FakeBackend.getBooks();
+
+  const searchResults = searchQuery
+    ? FakeBackend.searchBooks(searchQuery)
+    : books;
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Available Books</Text>
+
+      <TextInput
+        style={styles.search}
+        placeholder="Search books..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
+      <FlatList
+        data={searchResults}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('Details', { user, book: item })}
+          >
+            <View style={styles.bookBox}>
+              <Text style={styles.title} numberOfLines={2}>
+                {item.title}
+              </Text>
+              <Text style={styles.author}>{item.author}</Text>
+              <Text style={styles.price}>{item.price}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+        contentContainerStyle={{ paddingBottom: 40 }}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 15, backgroundColor: colors.white },
+  header: { fontSize: 24, fontWeight: 'bold', color: colors.primary, marginBottom: 12 },
+
+  search: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+
+  card: {
+    flex: 1,
+    margin: 5,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: 10,
+    padding: 12,
+    backgroundColor: colors.white,
+  },
+
+  bookBox: {
+    alignItems: 'center',
+  },
+
+  title: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.primary,
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  author: {
+    fontSize: 12,
+    color: colors.gray,
+    marginBottom: 6,
+  },
+  price: {
+    color: colors.gold,
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+});
