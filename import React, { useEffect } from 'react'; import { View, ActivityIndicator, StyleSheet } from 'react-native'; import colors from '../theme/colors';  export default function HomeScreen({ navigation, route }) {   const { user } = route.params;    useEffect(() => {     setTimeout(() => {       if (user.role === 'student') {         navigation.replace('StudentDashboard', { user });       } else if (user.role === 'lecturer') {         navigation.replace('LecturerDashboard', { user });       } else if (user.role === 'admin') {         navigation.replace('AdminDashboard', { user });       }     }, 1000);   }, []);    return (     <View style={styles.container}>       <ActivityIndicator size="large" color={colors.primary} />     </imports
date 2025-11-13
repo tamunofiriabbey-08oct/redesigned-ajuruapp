@@ -1,0 +1,2 @@
+import StudentDashboardScreen from '../screens/student/StudentDashboardScreen';
+import LecturerDashboardScreen from '../screens/lecturer/LecturerDashboardScreen';
