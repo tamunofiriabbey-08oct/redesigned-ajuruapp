@@ -1,0 +1,2 @@
+<Stack.Screen name="StudentDashboard" component={StudentDashboardScreen} />
+<Stack.Screen name="LecturerDashboard" component={LecturerDashboardScreen} />
