@@ -1,0 +1,50 @@
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import colors from '../theme/colors';
+import { FakeBackend } from '../data/fakeBackend';
+
+export default function BookDetailsScreen({ navigation, route }) {
+  const { user, book } = route.params;
+
+  const hasAccess = FakeBackend.userHasAccess(user.id, book.id);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>{book.title}</Text>
+
+      <Text style={styles.label}>Author: {book.author}</Text>
+      <Text style={styles.label}>Category: {book.category}</Text>
+      <Text style={styles.label}>Size: {book.size}</Text>
+      <Text style={styles.price}>{book.price}</Text>
+
+      {hasAccess ? (
+        <TouchableOpacity style={styles.btn}>
+          <Text style={styles.btnText}>Download Book</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => navigation.navigate('Payment', { user, book })}
+        >
+          <Text style={styles.btnText}>Buy Now</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20, backgroundColor: colors.white },
+  header: { fontSize: 24, fontWeight: 'bold', color: colors.primary, marginBottom: 15 },
+  label: { fontSize: 16, color: colors.gray, marginBottom: 6 },
+
+  price: { fontSize: 20, color: colors.gold, fontWeight: 'bold', marginBottom: 25 },
+
+  btn: {
+    backgroundColor: colors.primary,
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 15,
+  },
+  btnText: { color: colors.white, fontWeight: 'bold', textAlign: 'center' },
+});
