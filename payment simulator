@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { FakeBackend } from '../data/fakeBackend';
+import colors from '../theme/colors';
+
+export default function PaymentScreen({ navigation, route }) {
+  const { user, book } = route.params;
+  const [method, setMethod] = useState('Card');
+
+  const makePayment = () => {
+    FakeBackend.createTransaction(user.id, book.id, method, true);
+    navigation.navigate('Transactions', { user });
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Payment</Text>
+
+      <Text style={styles.label}>Book: {book.title}</Text>
+      <Text style={styles.price}>{book.price}</Text>
+
+      <Text style={styles.label}>Select Payment Method</Text>
+
+      <View style={styles.methods}>
+        {['Card', 'Transfer', 'USSD'].map(m => (
+          <TouchableOpacity
+            key={m}
+            style={[styles.methodBtn, method === m && styles.activeMethod]}
+            onPress={() => setMethod(m)}
+          >
+            <Text style={method === m ? styles.activeText : styles.methodText}>{m}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <TouchableOpacity style={styles.payBtn} onPress={makePayment}>
+        <Text style={styles.payText}>Pay Now</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20, backgroundColor: colors.white },
+  header: { fontSize: 24, fontWeight: 'bold', color: colors.primary, marginBottom: 20 },
+
+  label: { fontSize: 16, marginTop: 10, color: colors.gray },
+  price: { fontSize: 20, fontWeight: 'bold', color: colors.gold, marginBottom: 20 },
+
+  methods: { flexDirection: 'row', marginVertical: 15, gap: 10 },
+
+  methodBtn: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+    padding: 10,
+    borderRadius: 8,
+  },
+
+  activeMethod: {
+    backgroundColor: colors.primary,
+  },
+
+  methodText: { color: colors.primary },
+  activeText: { color: colors.white },
+
+  payBtn: {
+    marginTop: 20,
+    padding: 16,
+    backgroundColor: colors.primary,
+    borderRadius: 10,
+  },
+  payText: {
+    color: colors.white,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});
